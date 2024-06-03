@@ -1,0 +1,49 @@
+﻿@model IEnumerable<TodoApp_part_1.Models.TodoListModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <h1 class="mt-4">TODO List</h1>
+    <form asp-controller="Tod" asp-action="Add" method="post" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="Description" class="form-control" placeholder="New TODO item" required />
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Completed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model ?? Enumerable.Empty<TodoApp_part_1.Models.TodoListModel>())
+            {
+                <tr>
+                    <td>@item.Description</td>
+                    <td>
+                        <input type="checkbox" disabled="disabled" @(item.IsCompleted ? "checked" : "") />
+                    </td>
+                    <td>
+                        <form asp-controller="Tod" asp-action="Delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        @if (!item.IsCompleted)
+                        {
+                            <form asp-controller="Tod" asp-action="Complete" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
